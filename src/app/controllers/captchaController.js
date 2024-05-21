@@ -3,6 +3,16 @@ const User = require('../models/User')
 const UserCaptcha = require('../models/UserCaptcha')
 const AutoGenerateToken = require('../../middleware/CaptchaToken')
 class CaptchaController {
+  solve(req, res) {
+    try {
+      // const params = req.params
+      const value = req.body.img
+      res.json(value)
+    }
+    catch (err) {
+      res.json(err)
+    }
+  }
   async pay(req, res) {
     try {
       const { productId, uid } = req.body
@@ -32,7 +42,7 @@ class CaptchaController {
       } else {
         totalCost = item.price
       }
-      
+
       if (userMoney < totalCost) {
         res.json({ "error_code": 300, "message": "Not enough money" });
       } else {
@@ -66,7 +76,7 @@ class CaptchaController {
         res.json({ "error_code": 0, "message": "Captcha bought successfully" })
       }
     } catch (error) {
-      res.json({ "error_code": 1, "message": err })
+      res.json({ "error_code": 1, "message": error })
     }
   }
 }
