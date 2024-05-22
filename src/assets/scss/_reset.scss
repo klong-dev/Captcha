@@ -1,0 +1,21 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  overflow-y: scroll;
+  background-color: #f8f8ffe6 !important;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  -ms-overflow-style: none; /* Ẩn thanh cuộn cho Internet Explorer và Edge */
+  scrollbar-width: none; /* Ẩn thanh cuộn cho Firefox */
+}
+* {
+  font-family: "roboto_condensed_regular", sans-serif;
+}
