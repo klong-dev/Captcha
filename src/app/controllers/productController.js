@@ -19,7 +19,8 @@
         const returnItems = items.map(item => ({
           id: item.id,
           name: item.name,
-          price: item.price
+          price: item.price,
+          time: item.time
         }));
 
         res.json(returnItems);

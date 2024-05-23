@@ -11,7 +11,7 @@ class RegisterController {
       }
     })
     if (checkExistUser) {
-      let msg = 'Tên đăng nhập đã tồn tại';
+      let msg = 'Username already exists';
       return res.json({ "error_code": 1, "message": msg });
     }
 
