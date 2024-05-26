@@ -26,7 +26,7 @@ class RegisterController {
         password_hash: hashedPassword,
         email: email,
         full_name: name,
-        status: 1
+        status: 0
       })
         .then((user) => {
           res.json({ "error_code": 0, "message": "User signup successfully", user })
