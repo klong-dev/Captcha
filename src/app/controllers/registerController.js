@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 class RegisterController {
 
   async validate(req, res, next) {
+    
     const checkExistUser = await User.findOne({
       where: {
         username: req.body.username,
@@ -18,12 +19,11 @@ class RegisterController {
     const errors = validationResult(req).array();
 
     if (errors.length === 0) {
-      let { username, password, phone, email, name } = req.body;
+      let { username, password, email, name } = req.body;
       let hashedPassword = (await bcrypt.hash(password, 10)).toString();
       const user = await User.create({
         username: username,
         password_hash: hashedPassword,
-        phone: phone,
         email: email,
         full_name: name,
         status: 1
