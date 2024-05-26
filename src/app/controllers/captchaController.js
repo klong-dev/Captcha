@@ -18,6 +18,7 @@ class CaptchaController {
       const { productId, uid } = req.body
       let quantity = req.body.quantity
       if (quantity === undefined) {
+        // assign quantity = 0 if it is undefined
         quantity = 0
       }
       //----------------------------------------

@@ -3,7 +3,6 @@ const User = require('../models/User')
 class PaymentController {
   async payment(req, res) {
     const { uid, money } = req.body
-    console.log(uid, money)
     try {
       const user = await User.findOne({ where: { uid: uid } });
       if (!user) {

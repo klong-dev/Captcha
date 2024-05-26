@@ -3,8 +3,6 @@ const Captcha = require('../models/Captcha')
 class ProductController {
   async loadItems(req, res) {
     const { type } = req.body;
-    console.log('Request body:', type);
-
     try {
       const items = await Captcha.findAll({
         where: {
