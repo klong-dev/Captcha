@@ -17,10 +17,10 @@ class LoginController {
         res.json({ "error_code": 0, user, token });
       } else {
         let wrongPasswordMsg = "Password is incorrect";
-        res.json({ "error_code": 1, "message": wrongPasswordMsg });
+        res.json({ "error_code": 2, "message": wrongPasswordMsg });
       }
     } catch (err) {
-      res.json({ "error_code": 1, "message": err })
+      res.json({ "error_code": 3, "message": err })
     }
   }
 }
