@@ -5,6 +5,8 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import * as bootstrap from 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
+import Notifications from '@kyvg/vue3-notification'
+import VueCookies from 'vue-cookies'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
@@ -13,7 +15,8 @@ import router from './router'
 
 const app = createApp(App)
 
+app.use(VueCookies, { expires: '7d' })
 app.use(createPinia())
 app.use(router)
-
+app.use(Notifications)
 app.mount('#app')

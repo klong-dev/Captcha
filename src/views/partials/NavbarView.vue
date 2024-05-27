@@ -14,9 +14,12 @@ import { RouterLink } from 'vue-router'
         </div>
       </div>
       <div class="col-7 d-none d-sm-block">
-        <div class="nav-right">
+        <div v-if="$cookies.get('user') == null" class="nav-right">
           <RouterLink to="/login"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</RouterLink>
           <RouterLink to="/signup"><i class="bi bi-person-check"></i> Đăng Ký</RouterLink>
+        </div>
+        <div v-if="$cookies.get('user') != null" class="nav-right">
+          <h3>Xin chào {{ $cookies.get('user').username }}</h3>
         </div>
       </div>
     </div>
@@ -25,8 +28,14 @@ import { RouterLink } from 'vue-router'
   <nav class="navbar navbar-expand-sm bg-light navbar-light d-sm-none fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="@/assets/images/logo2.png" alt="logo" style="height: 40px" /></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <img src="@/assets/images/logo2.png" alt="logo" style="height: 40px"
+      /></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapsibleNavbar"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
@@ -43,7 +52,9 @@ import { RouterLink } from 'vue-router'
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="dangNhap.html"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a>
+            <a class="nav-link" href="dangNhap.html"
+              ><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a
+            >
           </li>
           <li class="nav-item">
             <a class="nav-link" href="dangKy.html"><i class="bi bi-person-check"></i> Đăng Ký</a>
@@ -92,7 +103,6 @@ export default {}
     text-align: center;
     border: 2px solid;
     padding: 5px 0px;
-    width: 15%;
     font-weight: 700;
     text-decoration: none !important;
   }
