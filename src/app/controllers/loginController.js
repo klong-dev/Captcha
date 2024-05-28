@@ -9,7 +9,7 @@ class LoginController {
       const user = await User.findOne({ where: { username: username } });
       if (!user) {
         let wrongUsernameMsg = "Username or password is incorrect";
-        res.json({ "error_code": 1, "message": wrongUsernameMsg });
+        return res.json({ "error_code": 1, "message": wrongUsernameMsg });
       }
       const valid = await bcrypt.compare(password, user.password_hash);
       if (valid) {
