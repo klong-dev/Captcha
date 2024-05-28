@@ -1,28 +1,27 @@
 <template>
   <div class="content">
     <div class="row d-flex justify-content-center">
-      <div class="col-11 col-md-11 col-lg-4 dangKy">
+      <div class="col-11 col-xl-6 col-md-11 col-lg-4 dangKy">
         <div class="header-form">
-          <h5>Đăng Ký</h5>
+          <h5 class="title">Đăng Ký</h5>
         </div>
-        <button @click="signup()" class="btn btn-primary col-5">Đăng Ký</button>
         <form class="body-form" @submit.prevent="handleSubmit">
           <div class="input-group row d-flex justify-content-center">
-            <label for="name" class="col-xl-3 col-4">Họ và Tên (*): </label>
+            <label for="name" class="col-xl-4 col-4">Họ và Tên (*): </label>
             <input type="text" v-model="name" id="name" class="col-5" />
           </div>
 
           <div class="input-group row d-flex justify-content-center">
-            <label for="username" class="col-xl-3 col-4">Tài Khoản (*): </label>
+            <label for="username" class="col-xl-4 col-4">Tài Khoản (*): </label>
             <input type="text" v-model="username" id="username" class="col-5" />
           </div>
 
           <div class="input-group row d-flex justify-content-center">
-            <label for="password" class="col-xl-3 col-4">Mật Khẩu (*): </label>
+            <label for="password" class="col-xl-4 col-4">Mật Khẩu (*): </label>
             <input type="password" v-model="password" id="password" class="col-5" />
           </div>
           <div class="input-group row d-flex justify-content-center">
-            <label for="email" class="col-xl-3 col-4">Email (*): </label>
+            <label for="email" class="col-xl-4 col-4">Email (*): </label>
             <input type="text" v-model="email" id="email" class="col-5" />
           </div>
           <div class="row justify-content-center">
@@ -35,7 +34,7 @@
           </div>
         </form>
       </div>
-      <div class="col-xl-3 col-11 rules">
+      <div class="col-xl-5 col-11 rules">
         <div class="header-rules">
           <h5>Quy Tắc</h5>
         </div>
@@ -86,32 +85,34 @@ export default {
           email: email
         })
         if (response.data.error_code === 0) {
-          // save tokento session storage
-
-          this.$router.push('/home')
+          this.$swal('Đăng ký thành công', '', 'success')
+          this.$cookies.set('user', JSON.stringify(response.data.user))
+          this.$router.push('/')
         } else {
-          console.log(response.data)
+          this.$swal('Đăng ký thất bại', response.data.message, 'error')
         }
       } catch (e) {
-        console.log('SignUp Error: ' + e)
+        this.$swal('Đăng ký thất bại', 'Có lỗi xảy ra', 'error')
       }
     }
   },
-  mounted() {
-    this.$notify({
-      title: 'Important message',
-      text: 'Hello user!'
-    })
-  }
+  mounted() {}
 }
 </script>
 <style lang="css" scoped>
+.c-line-center {
+  background-color: #1ca823;
+  height: 3px;
+  margin: 10px auto 10px auto;
+  width: 70px;
+}
 .content {
   margin-left: 2%;
   width: 96%;
   background-color: white;
   box-shadow: 0 0 10px 5px rgba(128, 128, 128, 0.5);
 }
+
 .dangKy {
   background-color: #212529;
   margin: 20px 20px 20px 0;
@@ -128,6 +129,8 @@ export default {
 }
 .dangKy > .header-form > h5 {
   color: white;
+  margin-bottom: 0px;
+  margin: 5px auto;
 }
 
 .dangKy > .body-form {
@@ -197,40 +200,49 @@ export default {
 }
 .rules > .header-rules > h5 {
   color: white;
+  margin-bottom: 0;
+  margin: 5px auto;
 }
 
 .rules > .body-rules {
   padding-top: 20px;
   padding-left: 10px;
+  padding-right: 10px;
   color: white;
 }
 
 /* Mobile Version */
+/* Mobile Version */
 @media (max-width: 576px) {
   .content {
-    margin-left: 0;
+    margin: 0 auto;
     margin-top: 30px;
     width: 100%;
-    padding: 10px auto;
-    padding-left: 0;
+    padding: 10px;
   }
-  .content > .row {
-    margin-right: 0;
-  }
+
   .dangKy,
   .rules {
-    margin: 20px 0;
+    margin: 20px auto;
+    width: 90%;
   }
 
   .dangKy > .body-form > input,
-  .rules > .body-rules {
-    width: 100%;
-  }
-
   .dangKy > .body-form > button,
   .dangKy > .body-form > a {
-    margin-left: auto;
-    margin-right: auto;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .dangKy label,
+  .dangKy input {
+    text-align: end;
+    padding-left: 10px;
+  }
+
+  .rules > .body-rules {
+    width: 100%;
+    text-align: left;
   }
 }
 </style>

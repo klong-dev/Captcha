@@ -3,19 +3,19 @@ import { RouterLink } from 'vue-router'
 </script>
 <template>
   <div class="content">
-    <div class="row d-flex justify-content-center">
-      <div class="col-11 col-md-11 col-lg-5 dangNhap">
+    <div class="row d-flex justify-content-center main-content">
+      <div class="col-xl-11 col-md-11 col-lg-5 dangNhap">
         <div class="header-form">
           <h5>Đăng Nhập</h5>
         </div>
         <form class="body-form" @submit.prevent="handleSubmit">
           <div class="input-group row d-flex justify-content-center">
-            <label for="account" class="col-xl-3 col-4">Tài Khoản & Email</label>
+            <label for="account" class="col-xl-4 col-5">Tài Khoản & Email</label>
             <input type="text" v-model="username" id="account" class="col-5" />
           </div>
 
-          <div class="input-group row d-flex justify-content-center">
-            <label for="password" class="col-xl-3 col-4">Mật Khẩu</label>
+          <div class="input-group row d-flex justify-content-center matKhau">
+            <label for="password" class="col-xl-4 col-5">Mật Khẩu</label>
             <input type="password" v-model="password" id="password" class="col-5" />
           </div>
           <div class="row justify-content-center setup">
@@ -43,11 +43,13 @@ import { RouterLink } from 'vue-router'
 </template>
 <script>
 import axios from 'axios'
+import { useStore } from '../stores/user'
 export default {
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      store: useStore()
     }
   },
   methods: {
@@ -58,10 +60,12 @@ export default {
           password: this.password
         })
         if (res.data.error_code === 0) {
+          this.$swal('Đăng nhập thành công', '', 'success')
           this.$cookies.set('user', JSON.stringify(res.data.user))
-          this.$router.push('/')
+          this.store.login()
+          this.this.$router.push('/')
         } else {
-          alert('Sai tài khoản hoặc mật khẩu')
+          this.$swal('Đăng nhập thất bại', 'Tài khoản hoặc mật khẩu không đúng', 'error')
         }
       } catch (error) {
         console.log(error)
@@ -71,13 +75,24 @@ export default {
 }
 </script>
 <style lang="css" scoped>
+.c-line-center {
+  background-color: #1ca823;
+  height: 3px;
+  margin: 10px auto 10px auto;
+  width: 70px;
+}
+
 .content {
-  margin-left: 2%;
-  width: 96%;
+  margin-left: 2% !important;
+  width: 96% !important;
   background-color: white;
   box-shadow: 0 0 10px 5px rgba(128, 128, 128, 0.5);
 }
+.main-content {
+  width: 33%;
+}
 .dangNhap {
+  width: 100%;
   background-color: #212529;
   margin: 20px 20px 20px 0;
   padding: 0 !important;
@@ -134,8 +149,26 @@ export default {
   border: 0;
   border-radius: 4px;
 }
+.matKhau {
+  margin-bottom: 20px !important;
+}
+.nhoTaiKhoan {
+  text-align: center;
+  margin-bottom: 15px;
+}
 .nhoTaiKhoan > label {
   margin: 0px;
+  margin-left: 5px;
+}
+.quenMatKhau {
+  text-align: center;
+}
+.quenMatKhau > a {
+  text-decoration: none;
+}
+.quenMatKhau > a:hover {
+  color: green;
+  text-decoration: none;
 }
 .setup {
   margin-bottom: 20px;
@@ -159,23 +192,34 @@ input[type='submit']:hover {
   color: black;
 }
 
-/*Mobile Version*/
+/* Mobile Version */
 @media (max-width: 576px) {
   .content {
-    width: 100%;
-    margin: 10px auto;
-    justify-content: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin: 10px auto !important;
+    width: 96% !important;
+    padding: 10px;
   }
-  .content > .row {
-    margin-left: 15px;
+
+  .main-content {
+    width: 100% !important;
   }
-  .row {
-    width: 100%;
-  }
+
   .dangNhap {
-    margin: 20px;
+    margin: 20px auto !important;
+    width: 100% !important;
+  }
+
+  .dangNhap > .body-form > input,
+  .dangNhap > .body-form > a {
+    width: 100% !important;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .dangKy > a {
+    width: 42% !important;
+    text-align: center;
+    margin: 0 auto;
   }
 }
 </style>

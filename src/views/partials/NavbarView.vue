@@ -18,8 +18,27 @@ import { RouterLink } from 'vue-router'
           <RouterLink to="/login"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</RouterLink>
           <RouterLink to="/signup"><i class="bi bi-person-check"></i> Đăng Ký</RouterLink>
         </div>
-        <div v-if="$cookies.get('user') != null" class="nav-right">
-          <h3>Xin chào {{ $cookies.get('user').username }}</h3>
+        <div v-if="$cookies.get('user') != null" class="nav-right navPhai">
+          <ul class="menu">
+            <li class="dropdown">
+              <h3 class="user">
+                <i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').username }}
+              </h3>
+              <ul class="dropdown_menu">
+                <li class="soTien">
+                  <h5>0Đ</h5>
+                </li>
+                <li class="li1">
+                  <RouterLink to="/profile">
+                    <i class="bi bi-person-fill"></i> Thông tin tài khoản
+                  </RouterLink>
+                </li>
+                <li class="li2">
+                  <a href="#" @click="logout()"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -50,7 +69,7 @@ import { RouterLink } from 'vue-router'
             <a class="nav-link" href="napTien.html">Nạp tiền</a>
           </li>
         </ul>
-        <ul class="navbar-nav">
+        <ul v-if="!this.store.isLoggedIn" class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" href="dangNhap.html"
               ><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a
@@ -60,21 +79,144 @@ import { RouterLink } from 'vue-router'
             <a class="nav-link" href="dangKy.html"><i class="bi bi-person-check"></i> Đăng Ký</a>
           </li>
         </ul>
+        <ul v-else class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="bi bi-person-check iconDaDangNhap"></i
+              >{{ $cookies.get('user').username }}</a
+            >
+            <!--Link nay de chuyen ve trang Thong Tin Tai Khoan-->
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
   <!--Kết thúc header-->
 </template>
 <script>
-export default {}
+// load the isSignedIn variable from user.js in store
+import { useStore } from '../../stores/user.js'
+export default {
+  data() {
+    return {
+      store: useStore()
+    }
+  },
+  methods: {
+    logout() {
+      this.$swal('Đăng xuất thành công', '', 'success')
+      this.$cookies.remove('user')
+      this.store.logout()
+      this.$router.push('/')
+    }
+  },
+  mounted() {
+    // check if the user is logged in
+    if (this.$cookies.get('user') != null) {
+      this.store.login()
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
+//Da dang nhap
+.bi-person-fill {
+  color: #2b00fe;
+  margin-right: 5px;
+  font-size: 130%;
+}
+.bi-box-arrow-right {
+  color: #dc3545;
+  margin-right: 5px;
+  font-size: 130%;
+}
+.soTien {
+  border-top: none !important ;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 0.2px solid gray !important;
+  margin: 5px auto;
+}
+.soTien > h5 {
+  margin: 0 auto;
+  color: #dc3545;
+}
+.li1 > a {
+  color: black;
+  margin: 10px auto;
+}
+.li1:hover > a {
+  color: #2b00fe;
+}
+.li2 > a {
+  color: black;
+  margin: 10px auto;
+}
+.li2:hover > a {
+  color: #dc3545;
+}
+.navPhai {
+  border: none;
+  margin-top: 10px !important; /* Tắt border của .navPhai */
+}
+
+.navPhai *:not(.soTien) {
+  border: 0 !important; /* Tắt border cho tất cả các phần tử con bên trong .navPhai */
+}
+
+.navPhai a {
+  text-decoration: none; /* Tắt decoration (ví dụ: underline) cho các liên kết */
+}
+.user {
+  margin: 0;
+}
+.menu {
+  list-style: none;
+  border: 0 !important;
+  margin: 0;
+  margin-right: 5%;
+}
+.dropdown > h3 {
+  color: #198754;
+}
+.dropdown:hover > h3 {
+  color: #14cf78;
+}
+.iconDaDangNhap {
+  margin-right: 8px !important;
+}
+.dropdown_menu {
+  margin-top: 5px;
+  align-items: start;
+  display: none;
+  position: absolute;
+  width: 98%;
+  background-color: #f9f9f9;
+  border: 2px solid rgb(157, 154, 154) !important;
+  box-shadow: 0 0 10px 5px rgba(206, 205, 205, 0.5);
+  z-index: 999;
+}
+
+.dropdown_menu li {
+  display: block;
+  margin: 10px auto;
+  padding-right: 0px;
+  text-align: left;
+}
+
+.dropdown:hover .dropdown_menu,
+.dropdown_menu:hover {
+  display: block;
+}
+
+//ket thuc da dang nhap
 .header {
   background-color: #ffffffe6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   & > .row {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
   }
 }
 .nav-left {
@@ -107,15 +249,23 @@ export default {}
     text-decoration: none !important;
   }
   & > a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     color: white;
     border: 2px solid #198754;
     background: #198756;
     border-radius: 5px;
+    padding: 0 15px;
     &:first-child {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       color: white;
       border: 2px solid #dc3545;
       background: #dc3545;
       border-radius: 5px;
+      padding: 0 10px;
       &:hover {
         color: black;
         border: 2px solid #dc3545;
@@ -125,6 +275,7 @@ export default {}
     }
     & > .bi-box-arrow-in-right {
       margin-left: 0px;
+      margin-right: 5px;
       border: 0px;
       padding-left: 0px;
       padding-right: 0px;
@@ -139,8 +290,14 @@ export default {}
 }
 .bi-person-check {
   margin-left: 0px;
+  margin-right: 5px;
   border: 0px;
   padding-left: 0px;
   padding-right: 0px;
+}
+@media (max-width: 576px) {
+  .header {
+    margin-bottom: 60px;
+  }
 }
 </style>
