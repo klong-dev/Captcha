@@ -2,12 +2,40 @@ const Captcha = require('../models/Captcha')
 const User = require('../models/User')
 const UserCaptcha = require('../models/UserCaptcha')
 const AutoGenerateToken = require('../../middleware/CaptchaToken')
+const axios = require('axios')
+const qs = require('qs');
 class CaptchaController {
-  solve(req, res) {
+  async solve(req, res) {
     try {
-      // const params = req.params
-      const value = req.body.img
-      res.json(value)
+      const image = req.body.image
+      const token = req.url.split('token=')[1]
+      const user = await UserCaptcha.findOne({
+        where: {
+          token: token
+        }
+      })
+      if (!user) {
+        return res.json({ error_code: 0, message: "User not found" });
+      }
+      if (user.type == 0 && user.quantity <= 0) {
+        return res.json({ error_code: 1, message: "Not enough captcha" })
+      }
+      if (user.type == 1 && user.time <= 0) {
+        return res.json({ error_code: 2, message: "Captcha expired" })
+      }
+      if (user.type == 1 && user.remain <= 0) {
+        return res.json({ error_code: 3, message: "Remained captcha is not enough" })
+      }
+
+      // if the validation is success then
+      if (user.type == 0) {
+        await user.decrement('quantity', { by: 1 });
+      }
+      if (user.type == 1) {
+        await user.decrement('remain', { by: 1 });
+      }
+      const response = await axios.post('http://42.96.0.15', qs.stringify({ base64: image, api_key: 'langcoc' }));
+      res.json(response.data)
     }
     catch (err) {
       res.json(err)
