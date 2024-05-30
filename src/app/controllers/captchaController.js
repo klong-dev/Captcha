@@ -77,7 +77,6 @@ class CaptchaController {
       const price = item.price
       let totalCost = 0
       const userMoney = user.money
-      console.log(userMoney)
       if (quantity) {
         totalCost = quantity * price
       } else {

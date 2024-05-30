@@ -9,7 +9,6 @@ class AdminController {
   async add(req, res) {
     try {
       const { name, price, type, time } = req.body
-      console.log(name, price, type, time)
       const newCaptcha = await Captcha.create({
         name: name,
         price: price,

@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator");
 const CreateCaptchaToken = require('../../middleware/CaptchaToken')
 class RegisterController {
 
-  async validate(req, res, next) {
+  async validate(req, res) {
     try {
       const checkExistUser = await User.findOne({
         where: {
@@ -31,17 +31,11 @@ class RegisterController {
         })
 
         if (user) {
-          console.log('breakpoint 1')
           const token = await CreateCaptchaToken()
-          console.log(token)
-          console.log('breakpoint 2')
-
           const userToken = await UserToken.create({
             uid: user.uid,
             token: token
           })
-          console.log(userToken)
-
           return res.json({ "error_code": 0, "message": "User signup successfully", user })
         } else {
           res.json({ "error_code": 1, "message": "Error while creating user" })
@@ -52,8 +46,6 @@ class RegisterController {
     } catch (error) {
       res.json(error)
     }
-
-
   }
 }
 
