@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../../config/db");
 const sequelize = db.sequelize;
+
 const UserCaptcha = sequelize.define(
   "user_captcha",
   {
@@ -9,30 +10,30 @@ const UserCaptcha = sequelize.define(
       primaryKey: true,
       allowNull: false
     },
-    token: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
     type: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: 0
     },
     quantity: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      allowNull: true
-    },
-    remain: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     time: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
+    },
+    remain: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
     }
   },
   {
-    timestamps: false, // Sử dụng timestamps để tự động thêm cột createdAt và updatedAt
+    timestamps: false,
   }
 );
 

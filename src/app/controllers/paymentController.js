@@ -3,6 +3,9 @@ const User = require('../models/User')
 class PaymentController {
   async payment(req, res) {
     const { uid, money } = req.body
+    if (!uid || !money) {
+      return res.json({ error_code: 4, message: "Invalid parameters" })
+    }
     try {
       const user = await User.findOne({ where: { uid: uid } });
       if (!user) {

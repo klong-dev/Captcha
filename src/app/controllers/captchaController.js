@@ -1,6 +1,7 @@
 const Captcha = require('../models/Captcha')
 const User = require('../models/User')
 const UserCaptcha = require('../models/UserCaptcha')
+const UserToken = require('../models/UserToken')
 const AutoGenerateToken = require('../../middleware/CaptchaToken')
 const axios = require('axios')
 const qs = require('qs');
@@ -9,14 +10,19 @@ class CaptchaController {
     try {
       const image = req.body.image
       const token = req.url.split('token=')[1]
-      const user = await UserCaptcha.findOne({
+      const checkExistUser = await UserToken.findOne({
         where: {
           token: token
         }
       })
-      if (!user) {
+      if (!checkExistUser) {
         return res.json({ error_code: 0, message: "User not found" });
       }
+      const user = await UserCaptcha.findOne({
+        where: {
+          uid: checkExistUser.uid
+        }
+      })
       if (user.type == 0 && user.quantity <= 0) {
         return res.json({ error_code: 1, message: "Not enough captcha" })
       }
@@ -41,9 +47,13 @@ class CaptchaController {
       res.json(err)
     }
   }
+
   async pay(req, res) {
     try {
       const { productId, uid } = req.body
+      if (!productId || !uid) {
+        return res.json({ error_code: 4, message: "Invalid parameters" })
+      }
       let quantity = req.body.quantity
       if (quantity === undefined) {
         // assign quantity = 0 if it is undefined
@@ -52,6 +62,7 @@ class CaptchaController {
       //----------------------------------------
       const item = await Captcha.findByPk(productId)
       const user = await User.findByPk(uid)
+
       if (!item) {
         res.json({ "error_code": 100, "message": "Product is not valid" })
       }
@@ -66,18 +77,19 @@ class CaptchaController {
       const price = item.price
       let totalCost = 0
       const userMoney = user.money
+      console.log(userMoney)
       if (quantity) {
         totalCost = quantity * price
       } else {
         totalCost = item.price
       }
-
       if (userMoney < totalCost) {
         res.json({ "error_code": 300, "message": "Not enough money" });
       } else {
         const transaction = await UserCaptcha.findOne({
           where: {
-            uid: uid, type: captchaType
+            uid: uid,
+            type: captchaType
           }
         })
         if (!transaction || transaction == null) {
@@ -86,7 +98,6 @@ class CaptchaController {
             uid: uid,
             type: item.type,   // type 0: quantity use 
             quantity: quantity,
-            token: token,
             remain: item.type * 10000,
             time: item.time
           })
