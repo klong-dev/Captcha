@@ -2,7 +2,6 @@ const Captcha = require('../models/Captcha')
 const User = require('../models/User')
 const UserCaptcha = require('../models/UserCaptcha')
 const UserToken = require('../models/UserToken')
-const AutoGenerateToken = require('../../middleware/CaptchaToken')
 const axios = require('axios')
 const qs = require('qs');
 class CaptchaController {
@@ -92,7 +91,6 @@ class CaptchaController {
           }
         })
         if (!transaction || transaction == null) {
-          const token = await AutoGenerateToken()
           await UserCaptcha.create({
             uid: uid,
             type: item.type,   // type 0: quantity use 
