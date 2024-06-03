@@ -110,6 +110,7 @@ class CaptchaController {
             }
           })
         }
+        await user.decrement('money', { by: totalCost });
         res.json({ "error_code": 0, "message": "Captcha bought successfully" })
       }
     } catch (error) {
