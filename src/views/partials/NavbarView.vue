@@ -14,24 +14,20 @@ import { RouterLink } from 'vue-router'
         </div>
       </div>
       <div class="col-7 d-none d-sm-block">
-        <div v-if="$cookies.get('user') == null" class="nav-right">
+        <div v-if="!store.isLoggedIn" class="nav-right">
           <RouterLink to="/login"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</RouterLink>
           <RouterLink to="/signup"><i class="bi bi-person-check"></i> Đăng Ký</RouterLink>
         </div>
-        <div v-if="$cookies.get('user') != null" class="nav-right navPhai">
+        <div v-else class="nav-right navPhai">
           <ul class="menu">
             <li class="dropdown">
-              <h3 class="user">
-                <i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').username }}
-              </h3>
+              <h3 class="user"><i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').full_name }}</h3>
               <ul class="dropdown_menu">
                 <li class="soTien">
                   <h5>0Đ</h5>
                 </li>
                 <li class="li1">
-                  <RouterLink to="/profile">
-                    <i class="bi bi-person-fill"></i> Thông tin tài khoản
-                  </RouterLink>
+                  <RouterLink to="/profile"> <i class="bi bi-person-fill"></i> Thông tin tài khoản </RouterLink>
                 </li>
                 <li class="li2">
                   <a href="#" @click="logout()"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
@@ -46,15 +42,8 @@ import { RouterLink } from 'vue-router'
 
   <nav class="navbar navbar-expand-sm bg-light navbar-light d-sm-none fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="@/assets/images/logo2.png" alt="logo" style="height: 40px"
-      /></a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#collapsibleNavbar"
-      >
+      <a class="navbar-brand" href="#"> <img src="@/assets/images/logo2.png" alt="logo" style="height: 40px" /></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
@@ -71,9 +60,7 @@ import { RouterLink } from 'vue-router'
         </ul>
         <ul v-if="!this.store.isLoggedIn" class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="dangNhap.html"
-              ><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a
-            >
+            <a class="nav-link" href="dangNhap.html"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="dangKy.html"><i class="bi bi-person-check"></i> Đăng Ký</a>
@@ -81,10 +68,7 @@ import { RouterLink } from 'vue-router'
         </ul>
         <ul v-else class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-person-check iconDaDangNhap"></i
-              >{{ $cookies.get('user').username }}</a
-            >
+            <a class="nav-link" href="#"> <i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').username }}</a>
             <!--Link nay de chuyen ve trang Thong Tin Tai Khoan-->
           </li>
         </ul>

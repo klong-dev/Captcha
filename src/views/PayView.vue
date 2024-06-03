@@ -6,19 +6,19 @@
         <div class="menuTK">
           <ul>
             <li>
-              <a href="index.html"><i class="bi bi-person-fill"></i>Thông tin tài khoản</a>
+              <RouterLink to="/profile"><i class="bi bi-person-fill"></i>Thông tin tài khoản</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-bell-fill"></i>Thông báo</a>
+              <a href="#"><i class="bi bi-bell-fill"></i>Thông báo</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-key-fill"></i>Đổi Mật Khẩu</a>
+              <a href="#"><i class="bi bi-key-fill"></i>Đổi Mật Khẩu</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-clock-history"></i>Lịch sử giao dịch</a>
+              <a href="#"><i class="bi bi-clock-history"></i>Lịch sử giao dịch</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
+              <a href="#" @click="logout()"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
             </li>
           </ul>
         </div>
@@ -26,19 +26,13 @@
         <div class="menuThe">
           <ul>
             <li>
-              <a href="index.html"><i class="bi bi-credit-card-fill"></i>Nạp thẻ</a>
+              <RouterLink to="/pay"><i class="bi bi-credit-card-fill"></i>Nạp thẻ</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-credit-card-fill"></i>Nạp ATM/VÍ</a>
+              <RouterLink to="/pay"><i class="bi bi-credit-card-fill"></i>Nạp ATM/VÍ</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-send"></i>Chuyển tiền</a>
-            </li>
-            <li>
-              <a href="index.html"><i class="bi bi-tools"></i>Quản lý CAPTCHA</a>
-            </li>
-            <li>
-              <a href="index.html"><i class="bi bi-tools"></i>Quản lý VPS</a>
+              <a href="#"><i class="bi bi-tools"></i>Quản lý CAPTCHA</a>
             </li>
           </ul>
         </div>
@@ -65,24 +59,26 @@
           <p>Lưu ý<span>: Chuyển sai nội dung pm góc phảo để xử lý</span></p>
 
           <p>THÔNG TIN TÀI KHOẢN NGÂN HÀNG</p>
-          <p><i class="bi bi-check-lg"></i>:MB Bank ( Ngân Hàng Quân Đội )</p>
-          <p>Chủ tài khoản: NGUYEN QUOC THUONG</p>
-          <p>STK/SĐT<span>1950199997236</span></p>
-
-          <div class="soTien row">
-            <label for="nap">Số tiền cần nạp: </label>
-            <input type="number" id="nap" />
-            <button>Tạo QR Bank</button>
+          <div class="row">
+            <div class="col-5">
+              <img class="bank-img" src="@/assets/images/techcombank.png" alt="" />
+              <p>Chủ tài khoản: TRAN DANG QUANG DAT</p>
+              <p>STK:<span>1160 7200 2222</span></p>
+            </div>
+            <div class="col-5">
+              <img class="bank-img" src="@/assets/images/momo.png" alt="" />
+              <p>Chủ tài khoản: TRẦN ĐẶNG QUANG ĐẠT</p>
+              <p>Momo/SĐT: <span>0877 851 900</span></p>
+            </div>
           </div>
         </div>
-        <div class="napTien row">
-          <p class="col-xl-5 col-5">Nội dung chuyển khoản của bạn:</p>
-          <div class="col-xl-6 col-6 d-flex align-items-center taoMa">
+        <div class="napTien d-flex align-items-center">
+          <p style="margin-bottom: 0 !important">Nội dung chuyển khoản của bạn:</p>
+          <div class="d-flex align-items-center taoMa">
             <input type="text" id="autoCode" class="form-control" value="longpro2k9" readonly />
-            <button type="button" class="btn btn-secondary mx-2" onclick="generateCode()">
-              Tạo Mã
-            </button>
-            <button type="button" class="btn btn-primary" @click="copyInput()">Sao Chép</button>
+            <div class="d-flex banking-code-btn">
+              <button type="button" class="btn btn-primary" @click="copyInput()">Sao Chép</button>
+            </div>
           </div>
         </div>
       </div>
@@ -90,17 +86,41 @@
   </div>
 </template>
 <script>
+import { useStore } from '../stores/user'
 export default {
+  data() {
+    return {
+      store: useStore()
+    }
+  },
   methods: {
     copyInput() {
-      const input = document.getElementById('autoCode');
-      input.select();
-      document.execCommand('copy');
+      const input = document.getElementById('autoCode')
+      input.select()
+      document.execCommand('copy')
     },
-  },
+    logout() {
+      this.$swal('Đăng xuất thành công', '', 'success')
+      this.$cookies.remove('user')
+      this.store.logout()
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 <style lang="css" scoped>
+.taoMa > input {
+  background-color: rgba(79, 219, 196, 0.548);
+}
+.banking-code-btn > button {
+  height: 40px;
+  width: 120px;
+}
+.bank-img {
+  width: auto;
+  height: 100px;
+  margin-bottom: 10px;
+}
 .content {
   margin-left: 2%;
   width: 96%;

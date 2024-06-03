@@ -6,19 +6,19 @@
         <div class="menuTK">
           <ul>
             <li>
-              <a href="index.html"><i class="bi bi-person-fill"></i>Thông tin tài khoản</a>
+              <RouterLink to="/profile"><i class="bi bi-person-fill"></i>Thông tin tài khoản</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-bell-fill"></i>Thông báo</a>
+              <a href="#"><i class="bi bi-bell-fill"></i>Thông báo</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-key-fill"></i>Đổi Mật Khẩu</a>
+              <a href="#"><i class="bi bi-key-fill"></i>Đổi Mật Khẩu</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-clock-history"></i>Lịch sử giao dịch</a>
+              <a href="#"><i class="bi bi-clock-history"></i>Lịch sử giao dịch</a>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
+              <a href="#" @click="logout()"><i class="bi bi-box-arrow-right"></i>Đăng xuất</a>
             </li>
           </ul>
         </div>
@@ -26,19 +26,13 @@
         <div class="menuThe">
           <ul>
             <li>
-              <a href="index.html"><i class="bi bi-credit-card-fill"></i>Nạp thẻ</a>
+              <RouterLink to="/pay"><i class="bi bi-credit-card-fill"></i>Nạp thẻ</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-credit-card-fill"></i>Nạp ATM/VÍ</a>
+              <RouterLink to="/pay"><i class="bi bi-credit-card-fill"></i>Nạp ATM/VÍ</RouterLink>
             </li>
             <li>
-              <a href="index.html"><i class="bi bi-send"></i>Chuyển tiền</a>
-            </li>
-            <li>
-              <a href="index.html"><i class="bi bi-tools"></i>Quản lý CAPTCHA</a>
-            </li>
-            <li>
-              <a href="index.html"><i class="bi bi-tools"></i>Quản lý VPS</a>
+              <a href="#"><i class="bi bi-tools"></i>Quản lý CAPTCHA</a>
             </li>
           </ul>
         </div>
@@ -48,42 +42,42 @@
           <img src="/assets/images/avatar.png" alt="avatar" class="rounded-circle" />
         </div>
         <!---Ten Tai Khoan-->
-        <h4 class="name text-center">Huy Đẹp Chai</h4>
+        <h4 class="name text-center">{{ $cookies.get('user').full_name }}</h4>
         <h5 class="chucVu text-center">Thành Viên</h5>
         <h3 class="title">THÔNG TIN TÀI KHOẢN</h3>
         <div class="tt row">
           <div class="muc display-flex flex-direction-column">
             <ul class="d-flex justify-content-between hang so1">
               <li class="col-4 text-left">Tài Khoản</li>
-              <li class="col-4 text-center">huyne2503</li>
+              <li class="col-4 text-center">{{ $cookies.get('user').username }}</li>
               <li class="col-3 text-right">
                 <button><i class="bi bi-eye"></i>Xem</button>
               </li>
             </ul>
             <ul class="d-flex justify-content-between hang so2">
               <li class="col-4 text-left">Họ và Tên</li>
-              <li class="col-4 text-center">Huy</li>
+              <li class="col-4 text-center">{{ $cookies.get('user').full_name }}</li>
               <li class="col-3 text-right">
                 <button><i class="bi bi-pencil-square"></i>Sửa</button>
               </li>
             </ul>
             <ul class="d-flex justify-content-between hang so3">
               <li class="col-4 text-left">Số Dư</li>
-              <li class="col-4 text-center">1 Tỷ</li>
+              <li class="col-4 text-center">{{ $cookies.get('user').money.toLocaleString() }}đ</li>
               <li class="col-3 text-right">
                 <button><i class="bi bi-credit-card-fill"></i>Nạp</button>
               </li>
             </ul>
             <ul class="d-flex justify-content-between hang so4">
               <li class="col-4 text-left">Email</li>
-              <li class="col-4 text-center">lehuy25032004@gmail.com</li>
+              <li class="col-4 text-center">{{ $cookies.get('user').email }}</li>
               <li class="col-3 text-right">
                 <button><i class="bi bi-pencil-square"></i>Sửa</button>
               </li>
             </ul>
             <ul class="d-flex justify-content-between hang so5">
-              <li class="col-4 text-left">Hoạt Động</li>
-              <li class="col-4 text-center">Bây tự ghi vô đi</li>
+              <li class="col-4 text-left">Trạng thái</li>
+              <li class="col-4 text-center" :style="'color: ' + ($cookies.get('user').status === 0 ? 'green' : 'red')">{{ $cookies.get('user').status === 0 ? 'Đang hoạt động' : 'Tạm khóa' }}</li>
               <li class="col-3 text-right">
                 <button><i class="bi bi-eye"></i>Xem</button>
               </li>
@@ -93,13 +87,90 @@
       </div>
     </div>
   </div>
+  <div class="content list-product">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-6 col-sm-10">
+        <h2 class="api-name">API CAPTCHA:</h2>
+        <div class="row d-flex align-items-center justify-content-evenly" v-for="(api, index) in list_api" :key="index">
+          <div class="col-2">
+            <button class="btn btn-primary">Copy API</button>
+          </div>
+          <div class="col-7">
+            <input type="text" readonly class="api_name_input" :value="'http://captchanro.com/captcha/solve?token=' + api" />
+          </div>
+          <div class="col-2">
+            <button class="btn btn-danger" @click="deleteAPI(api)">Xóa API</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 d-flex justify-content-center">
+        <button class="btn btn-warning" style="margin-top: 20px" @click="createAPI()">Tạo thêm API</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-export default {}
+import axios from 'axios'
+import { useStore } from '../stores/user'
+export default {
+  data() {
+    return {
+      list_api: [],
+      store: useStore()
+    }
+  },
+  methods: {
+    loadAPI() {
+      axios
+        .post('http://localhost:3000/token/load', { uid: this.$cookies.get('user').uid })
+        .then((res) => {
+          this.list_api = res.data
+          console.log(this.list_api)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    createAPI() {
+      axios.post('http://localhost:3000/token/add', { uid: this.$cookies.get('user').uid }).then(() => {
+        this.loadAPI()
+      })
+    },
+    deleteAPI(token) {
+      axios.post('http://localhost:3000/token/delete', { uid: this.$cookies.get('user').uid, token: token }).then(() => {
+        this.loadAPI()
+      })
+    },
+    logout() {
+      this.$swal('Đăng xuất thành công', '', 'success')
+      this.$cookies.remove('user')
+      this.store.logout()
+      this.$router.push('/')
+    }
+  },
+  mounted() {
+    this.loadAPI()
+  }
+}
 </script>
 
 <style lang="css" scoped>
+.api-name {
+  text-align: center;
+}
+.api_name_input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.list-product {
+  margin-top: 50px;
+  padding: 20px 0;
+}
 .content {
   margin-left: 2%;
   width: 96%;

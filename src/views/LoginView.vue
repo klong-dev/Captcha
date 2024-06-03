@@ -63,7 +63,7 @@ export default {
           this.$swal('Đăng nhập thành công', '', 'success')
           this.$cookies.set('user', JSON.stringify(res.data.user))
           this.store.login()
-          this.this.$router.push('/')
+          this.$router.push('/')
         } else {
           this.$swal('Đăng nhập thất bại', 'Tài khoản hoặc mật khẩu không đúng', 'error')
         }
