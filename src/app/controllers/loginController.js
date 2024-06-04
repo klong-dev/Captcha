@@ -8,7 +8,7 @@ class LoginController {
       const { username, password } = req.body;
       const user = await User.findOne({ where: { username: username } });
       if (!user) {
-        let wrongUsernameMsg = "Username or password is incorrect";
+        let wrongUsernameMsg = "Tên người dùng hoặc mật khẩu không đúng";
         return res.json({ "error_code": 1, "message": wrongUsernameMsg });
       }
       const valid = await bcrypt.compare(password, user.password_hash);
@@ -16,11 +16,11 @@ class LoginController {
         const token = createToken.createToken(user.id);
         res.json({ "error_code": 0, user, token });
       } else {
-        let wrongPasswordMsg = "Password is incorrect";
+        let wrongPasswordMsg = "Mật khẩu không đúng";
         res.json({ "error_code": 2, "message": wrongPasswordMsg });
       }
     } catch (err) {
-      res.json({ "error_code": 3, "message": err })
+      res.json({ "error_code": 3, "message": err.message || err })
     }
   }
 }

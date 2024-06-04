@@ -27,6 +27,11 @@ const Captcha = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1000
+    },
+    min: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
     }
   },
   {

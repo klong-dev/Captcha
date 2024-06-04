@@ -1,19 +1,19 @@
 const User = require("../models/User");
-const UserToken = require('../models/UserToken')
+const UserToken = require('../models/UserToken');
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
-const CreateCaptchaToken = require('../../middleware/CaptchaToken')
-class RegisterController {
+const CreateCaptchaToken = require('../../middleware/CaptchaToken');
 
+class RegisterController {
   async validate(req, res) {
     try {
       const checkExistUser = await User.findOne({
         where: {
           username: req.body.username,
         }
-      })
+      });
       if (checkExistUser) {
-        let msg = 'Username already exists';
+        let msg = 'Tên người dùng đã tồn tại';
         return res.json({ "error_code": 1, "message": msg });
       }
 
@@ -28,23 +28,23 @@ class RegisterController {
           email: email,
           full_name: name,
           status: 0
-        })
+        });
 
         if (user) {
-          const token = await CreateCaptchaToken()
+          const token = await CreateCaptchaToken();
           const userToken = await UserToken.create({
             uid: user.uid,
             token: token
-          })
-          return res.json({ "error_code": 0, "message": "User signup successfully", user })
+          });
+          return res.json({ "error_code": 0, "message": "Đăng ký người dùng thành công", user });
         } else {
-          res.json({ "error_code": 1, "message": "Error while creating user" })
+          res.json({ "error_code": 1, "message": "Lỗi khi tạo người dùng" });
         }
       } else {
         res.json({ "error_code": 1, "message": errors });
       }
     } catch (error) {
-      res.json(error)
+      res.json(error);
     }
   }
 }

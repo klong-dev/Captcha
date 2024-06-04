@@ -4,6 +4,7 @@ const UserCaptcha = require('../models/UserCaptcha')
 const UserToken = require('../models/UserToken')
 const axios = require('axios')
 const qs = require('qs');
+
 class CaptchaController {
   async solve(req, res) {
     try {
@@ -15,7 +16,7 @@ class CaptchaController {
         }
       })
       if (!checkExistUser) {
-        return res.json({ error_code: 0, message: "User not found" });
+        return res.json({ error_code: 0, message: "Không tìm thấy người dùng" });
       }
       const user = await UserCaptcha.findOne({
         where: {
@@ -23,16 +24,16 @@ class CaptchaController {
         }
       })
       if (user.type == 0 && user.quantity <= 0) {
-        return res.json({ error_code: 1, message: "Not enough captcha" })
+        return res.json({ error_code: 1, message: "Không đủ captcha" })
       }
       if (user.type == 1 && user.time <= 0) {
-        return res.json({ error_code: 2, message: "Captcha expired" })
+        return res.json({ error_code: 2, message: "Captcha đã hết hạn" })
       }
       if (user.type == 1 && user.remain <= 0) {
-        return res.json({ error_code: 3, message: "Remained captcha is not enough" })
+        return res.json({ error_code: 3, message: "Số lượng captcha còn lại không đủ" })
       }
 
-      // if the validation is success then
+      // nếu kiểm tra thành công thì
       if (user.type == 0) {
         await user.decrement('quantity', { by: 1 });
       }
@@ -51,38 +52,46 @@ class CaptchaController {
     try {
       const { productId, uid } = req.body
       if (!productId || !uid) {
-        return res.json({ error_code: 4, message: "Invalid parameters" })
+        return res.json({ error_code: 4, message: "Tham số không hợp lệ" })
       }
+
       let quantity = req.body.quantity
       if (quantity === undefined) {
         // assign quantity = 0 if it is undefined
         quantity = 0
       }
       //----------------------------------------
-      const item = await Captcha.findByPk(productId)
-      const user = await User.findByPk(uid)
+      const [item, user] = await Promise.all([
+        Captcha.findByPk(productId),
+        User.findByPk(uid)
+      ]);
+
 
       if (!item) {
-        res.json({ "error_code": 100, "message": "Product is not valid" })
+        return res.json({ error_code: 100, message: "Sản phẩm không hợp lệ" });
       }
       if (!user) {
-        res.json({ "error_code": 200, "message": "User is not valid" })
+        return res.json({ error_code: 200, message: "Người dùng không hợp lệ" });
       }
       //-----------------------------------------
       const captchaType = item.type
       if ((captchaType === 0 && quantity === 0) || (captchaType === 1 && quantity !== 0)) {
-        return res.json({ "error_code": 1, "message": "Invalid request" });
+        return res.json({ error_code: 1, message: "Yêu cầu không hợp lệ" });
       }
       const price = item.price
       let totalCost = 0
+
       const userMoney = user.money
       if (quantity) {
         totalCost = quantity * price
       } else {
         totalCost = item.price
       }
+      if (totalCost > item.min) {
+        return res.json({ error_code: 500, message: "Số lượng captcha không hợp lệ" });
+      }
       if (userMoney < totalCost) {
-        res.json({ "error_code": 300, "message": "Not enough money" });
+        return res.json({ error_code: 300, message: "Không đủ tiền" });
       } else {
         const transaction = await UserCaptcha.findOne({
           where: {
@@ -93,7 +102,7 @@ class CaptchaController {
         if (!transaction || transaction == null) {
           await UserCaptcha.create({
             uid: uid,
-            type: item.type,   // type 0: quantity use 
+            type: item.type,   // type 0: sử dụng số lượng 
             quantity: quantity,
             remain: item.type * 10000,
             time: item.time
@@ -111,11 +120,12 @@ class CaptchaController {
           })
         }
         await user.decrement('money', { by: totalCost });
-        res.json({ "error_code": 0, "message": "Captcha bought successfully" })
+        return res.json({ error_code: 0, message: "Mua captcha thành công" })
       }
     } catch (error) {
-      res.json({ "error_code": 1, "message": error })
+      return res.json({ error_code: 1, message: error.message || error })
     }
   }
 }
-module.exports = new CaptchaController()
+
+module.exports = new CaptchaController();
