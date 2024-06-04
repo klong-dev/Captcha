@@ -21,10 +21,11 @@ import { RouterLink } from 'vue-router'
         <div v-else class="nav-right navPhai">
           <ul class="menu">
             <li class="dropdown">
-              <h3 class="user"><i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').full_name }}</h3>
+              <h3 class="user"><i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').full_name }}
+              </h3>
               <ul class="dropdown_menu">
                 <li class="soTien">
-                  <h5>0Đ</h5>
+                  <h5>{{ $cookies.get('user').money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}đ</h5>
                 </li>
                 <li class="li1">
                   <RouterLink to="/profile"> <i class="bi bi-person-fill"></i> Thông tin tài khoản </RouterLink>
@@ -68,7 +69,8 @@ import { RouterLink } from 'vue-router'
         </ul>
         <ul v-else class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#"> <i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').username }}</a>
+            <a class="nav-link" href="#"> <i
+                class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').username }}</a>
             <!--Link nay de chuyen ve trang Thong Tin Tai Khoan-->
           </li>
         </ul>
@@ -109,66 +111,83 @@ export default {
   margin-right: 5px;
   font-size: 130%;
 }
+
 .bi-box-arrow-right {
   color: #dc3545;
   margin-right: 5px;
   font-size: 130%;
 }
+
 .soTien {
-  border-top: none !important ;
+  border-top: none !important;
   border-left: none !important;
   border-right: none !important;
   border-bottom: 0.2px solid gray !important;
   margin: 5px auto;
 }
-.soTien > h5 {
+
+.soTien>h5 {
   margin: 0 auto;
   color: #dc3545;
 }
-.li1 > a {
+
+.li1>a {
   color: black;
   margin: 10px auto;
 }
-.li1:hover > a {
+
+.li1:hover>a {
   color: #2b00fe;
 }
-.li2 > a {
+
+.li2>a {
   color: black;
   margin: 10px auto;
 }
-.li2:hover > a {
+
+.li2:hover>a {
   color: #dc3545;
 }
+
 .navPhai {
   border: none;
-  margin-top: 10px !important; /* Tắt border của .navPhai */
+  margin-top: 10px !important;
+  /* Tắt border của .navPhai */
 }
 
 .navPhai *:not(.soTien) {
-  border: 0 !important; /* Tắt border cho tất cả các phần tử con bên trong .navPhai */
+  border: 0 !important;
+  /* Tắt border cho tất cả các phần tử con bên trong .navPhai */
 }
 
 .navPhai a {
-  text-decoration: none; /* Tắt decoration (ví dụ: underline) cho các liên kết */
+  text-decoration: none;
+  /* Tắt decoration (ví dụ: underline) cho các liên kết */
 }
+
 .user {
   margin: 0;
 }
+
 .menu {
   list-style: none;
   border: 0 !important;
   margin: 0;
   margin-right: 5%;
 }
-.dropdown > h3 {
+
+.dropdown>h3 {
   color: #198754;
 }
-.dropdown:hover > h3 {
+
+.dropdown:hover>h3 {
   color: #14cf78;
 }
+
 .iconDaDangNhap {
   margin-right: 8px !important;
 }
+
 .dropdown_menu {
   margin-top: 5px;
   align-items: start;
@@ -198,32 +217,38 @@ export default {
   background-color: #ffffffe6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  & > .row {
+
+  &>.row {
     padding-bottom: 10px;
     padding-top: 10px;
   }
 }
+
 .nav-left {
   display: flex;
   justify-content: start;
   margin-top: 10px;
   margin-left: 10px;
-  & > a {
+
+  &>a {
     margin-top: 20px;
     text-decoration: none !important;
     color: black;
     font-weight: 700;
   }
+
   * {
     margin-right: 20px;
     text-align: center;
   }
 }
+
 .nav-right {
   display: flex;
   justify-content: end;
   margin-right: 30px;
   margin-top: 28px;
+
   * {
     margin-left: 20px;
     text-align: center;
@@ -232,7 +257,8 @@ export default {
     font-weight: 700;
     text-decoration: none !important;
   }
-  & > a {
+
+  &>a {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -241,6 +267,7 @@ export default {
     background: #198756;
     border-radius: 5px;
     padding: 0 15px;
+
     &:first-child {
       display: inline-flex;
       justify-content: center;
@@ -250,6 +277,7 @@ export default {
       background: #dc3545;
       border-radius: 5px;
       padding: 0 10px;
+
       &:hover {
         color: black;
         border: 2px solid #dc3545;
@@ -257,13 +285,15 @@ export default {
         border-radius: 5px;
       }
     }
-    & > .bi-box-arrow-in-right {
+
+    &>.bi-box-arrow-in-right {
       margin-left: 0px;
       margin-right: 5px;
       border: 0px;
       padding-left: 0px;
       padding-right: 0px;
     }
+
     &:hover {
       color: black;
       border: 2px solid #198754;
@@ -272,6 +302,7 @@ export default {
     }
   }
 }
+
 .bi-person-check {
   margin-left: 0px;
   margin-right: 5px;
@@ -279,6 +310,7 @@ export default {
   padding-left: 0px;
   padding-right: 0px;
 }
+
 @media (max-width: 576px) {
   .header {
     margin-bottom: 60px;

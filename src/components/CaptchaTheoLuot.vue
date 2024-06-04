@@ -12,7 +12,7 @@
             <p><i class="bi bi-check-circle"></i> Tiết kiệm thời gian</p>
             <p><i class="bi bi-check-circle"></i> Giải siêu tốc &lt; 1 giây</p>
             <p><i class="bi bi-check-circle"></i> Hỗ Trợ 24/7</p>
-            <button><span>THANH TOÁN</span></button>
+            <button @click="buy(product.id)"><span>THANH TOÁN</span></button>
           </div>
         </li>
       </ul>
@@ -28,6 +28,14 @@ export default {
     }
   },
   methods: {
+    async buy(id) {
+      const response = await axios.post('http://localhost:3000/captcha/pay', { productId: id, uid: this.$cookies.get('user').uid, quantity: 1 })
+      if (response.data.error_code === 0) {
+        this.$swal('Thanh toán thành công', '', 'success')
+      } else {
+        this.$swal(response.data.message, '', 'error')
+      }
+    },
     async loadProduct() {
       const response = await axios.post('http://localhost:3000/product/load', { type: 0 })
       if (response.status == 200) {
@@ -45,12 +53,14 @@ export default {
   justify-content: center;
   margin-bottom: 30px;
 }
+
 h2 {
   text-align: center;
   font-weight: 700;
   padding-bottom: 10px;
   margin-bottom: 0px;
 }
+
 .first-list > ul {
   display: flex;
   justify-content: space-around;

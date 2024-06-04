@@ -16,7 +16,6 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
-
 app.use(VueCookies, { expires: '7d' })
 app.use(VueSweetalert2)
 app.use(createPinia())
