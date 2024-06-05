@@ -16,7 +16,7 @@ class CaptchaController {
         }
       })
       if (!checkExistUser) {
-        return res.json({ error_code: 0, message: "Không tìm thấy người dùng" });
+        return res.json({ error_code: 1, message: "Không tìm thấy người dùng" });
       }
       const user = await UserCaptcha.findOne({
         where: {
@@ -76,7 +76,7 @@ class CaptchaController {
       //-----------------------------------------
       const captchaType = item.type
       if ((captchaType === 0 && quantity === 0) || (captchaType === 1 && quantity !== 0)) {
-        return res.json({ error_code: 1, message: "Yêu cầu không hợp lệ" });
+        return res.json({ error_code: 300, message: "Yêu cầu không hợp lệ" });
       }
       const price = item.price
       let totalCost = 0

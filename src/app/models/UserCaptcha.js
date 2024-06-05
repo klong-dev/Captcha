@@ -6,7 +6,7 @@ const UserCaptcha = sequelize.define(
   "user_captcha",
   {
     uid: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(10),
       primaryKey: true,
       allowNull: false
     },

@@ -31,6 +31,7 @@ class RegisterController {
         });
 
         if (user) {
+          console.log(user.uid)
           const token = await CreateCaptchaToken();
           const userToken = await UserToken.create({
             uid: user.uid,

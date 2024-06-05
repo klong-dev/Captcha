@@ -6,14 +6,14 @@ const UserCaptcha = require("./UserCaptcha");
 const UserToken = sequelize.define(
   "user_token",
   {
+    uid: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
     token: {
       type: DataTypes.STRING(20),
       primaryKey: true,
       allowNull: false
-    },
-    uid: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
     }
   },
   {
