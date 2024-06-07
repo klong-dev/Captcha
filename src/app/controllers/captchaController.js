@@ -50,23 +50,23 @@ class CaptchaController {
 
   async pay(req, res) {
     try {
-      const { productId, uid } = req.body
+      const { productId, uid, money } = req.body
       if (!productId || !uid) {
         return res.json({ error_code: 4, message: "Tham số không hợp lệ" })
       }
-
-      let quantity = req.body.quantity
-      if (quantity === undefined) {
-        // assign quantity = 0 if it is undefined
-        quantity = 0
-      }
-      //----------------------------------------
       const [item, user] = await Promise.all([
         Captcha.findByPk(productId),
         User.findByPk(uid)
       ]);
 
-
+      let quantity = 0;
+      if (money === undefined) {
+        // assign quantity = 0 if money is undefined
+        quantity = 0
+      } else {
+        quantity = Math.floor(req.body.money / item.price)
+      }
+      //----------------------------------------
       if (!item) {
         return res.json({ error_code: 100, message: "Sản phẩm không hợp lệ" });
       }
@@ -87,7 +87,8 @@ class CaptchaController {
       } else {
         totalCost = item.price
       }
-      if (totalCost > item.min) {
+
+      if (totalCost < item.min) {
         return res.json({ error_code: 500, message: "Số lượng captcha không hợp lệ" });
       }
       if (userMoney < totalCost) {

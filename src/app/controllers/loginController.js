@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const createToken = require('../../middleware/CreateToken');
 
 class LoginController {
   async validate(req, res, next) {
@@ -13,8 +12,7 @@ class LoginController {
       }
       const valid = await bcrypt.compare(password, user.password_hash);
       if (valid) {
-        const token = createToken.createToken(user.id);
-        res.json({ "error_code": 0, user, token });
+        res.json({ "error_code": 0, user});
       } else {
         let wrongPasswordMsg = "Mật khẩu không đúng";
         res.json({ "error_code": 2, "message": wrongPasswordMsg });

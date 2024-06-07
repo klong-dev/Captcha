@@ -4,5 +4,4 @@ const productController = require("../app/controllers/productController");
 
 router.post("/load", productController.loadItems);
 
-
 module.exports = router;
