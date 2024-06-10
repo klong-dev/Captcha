@@ -1,10 +1,10 @@
-const login = require('./login');
 const register = require('./register');
+const product = require('./product');
 const payment = require('./payment');
 const captcha = require('./captcha')
-const admin = require('./admin')
-const product = require('./product')
-const token = require('./token')
+const token = require('./token');
+const admin = require('./admin');
+const login = require('./login');
 
 
 function routes(app) {

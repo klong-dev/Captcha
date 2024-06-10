@@ -3,12 +3,14 @@ const path = require("path");
 const routes = require("./routes");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const validateHost = require('./middleware/HostValidator'); 
 
 require('dotenv').config();
 
 const db = require("./config/db");
 const app = express();
 
+app.use(validateHost.check);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -20,7 +22,7 @@ db.connect();
 routes(app);
 
 app.get("/", (req, res) => {
-  res.json(200, { connection: "success" });
+  res.json({ connection: "success" });
 })
 
 app.listen(process.env.PORT || 3000, () => {
