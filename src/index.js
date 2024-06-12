@@ -3,14 +3,12 @@ const path = require("path");
 const routes = require("./routes");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const validateHost = require('./middleware/HostValidator'); 
 
 require('dotenv').config();
 
 const db = require("./config/db");
 const app = express();
 
-app.use(validateHost.check);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.json());
