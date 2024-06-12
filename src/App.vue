@@ -10,4 +10,8 @@ import FooterView from './views/partials/FooterView.vue'
   <FooterView />
 </template>
 
+<script>
+
+</script>
+
 <style lang="scss" scoped></style>

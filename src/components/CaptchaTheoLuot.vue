@@ -12,36 +12,100 @@
             <p><i class="bi bi-check-circle"></i> Tiết kiệm thời gian</p>
             <p><i class="bi bi-check-circle"></i> Giải siêu tốc &lt; 1 giây</p>
             <p><i class="bi bi-check-circle"></i> Hỗ Trợ 24/7</p>
-            <button @click="buy(product.id)"><span>THANH TOÁN</span></button>
+            <button @click="buy(product)"><span>THANH TOÁN</span></button>
           </div>
         </li>
       </ul>
     </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="buyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="buyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title fs-5" id="buyModalLabel">Nhập số tiền muốn mua</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="buyPrice">Nhập số tiền: </label>
+            <input class="form-control" id="buyPrice" type="number" v-model="buyMoney" :step="buyMoney"
+              @input="handleInputChange">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="buyMoney" style="color: red">Captcha nhận được: </label>
+            <input class="form-control" id="buyMoney" style="background-color: #EEEEEE; color: red" type="number"
+              :value="c_product == null ? 0 : Math.floor(buyMoney / c_product.price)" readonly>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" @click="buyProduct()">Mua Captcha</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import axios from 'axios'
+import { useStore } from '../stores/user'
+import { Modal } from 'bootstrap/dist/js/bootstrap.min';
 export default {
   data() {
     return {
-      products: []
+      products: [],
+      c_product: null,
+      buyMoney: 0,
+      store: useStore(),
+      modal: null
     }
   },
   methods: {
-    async buy(id) {
-      const response = await axios.post('http://localhost:3000/captcha/pay', { productId: id, uid: this.$cookies.get('user').uid, quantity: 1 })
+    buy(product) {
+      this.c_product = product;
+      this.buyMoney = product.price;
+      this.modal = new Modal(document.getElementById('buyModal'))
+      this.modal.show();
+    },
+    async buyProduct() {
+      if (!this.store.user) {
+        this.modal.hide()
+        this.$router.push('/login')
+      }
+      if (this.c_product == null) return;
+      const response = await axios.post('https://run.captchanro.com/captcha/pay', { productId: this.c_product.id, uid: this.store.user.uid })
       if (response.data.error_code === 0) {
         this.$swal('Thanh toán thành công', '', 'success')
+        this.store.setUserMoney(this.store.user.money - Number(this.c_product.price.replace('.', '')))
       } else {
         this.$swal(response.data.message, '', 'error')
       }
     },
     async loadProduct() {
-      const response = await axios.post('http://localhost:3000/product/load', { type: 0 })
-      if (response.status == 200) {
-        this.products = response.data
+      try {
+        const response = await axios.post('https://run.captchanro.com/product/load', { type: 0 })
+        if (response.status == 200) {
+          this.products = response.data
+        }
+      } catch (e) {
+        alert(e)
       }
-    }
+    },
+    handleInputChange(event) {
+      const inputValue = parseInt(event.target.value, 10);
+      const remainder = inputValue % this.buyMoney;
+
+      if (remainder === 0) {
+        // Value is divisible by 15, no need to modify
+        this.quantity = inputValue;
+      } else {
+        // Round down to the nearest multiple of 15
+        const nearestMultiple = inputValue - remainder;
+        this.quantity = nearestMultiple;
+      }
+    },
   },
   mounted() {
     this.loadProduct()

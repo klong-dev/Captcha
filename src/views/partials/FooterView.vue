@@ -29,89 +29,98 @@ export default {
 <style lang="css" scoped>
 /*footer*/
 .footer {
-    margin-top: 30px;
-    background-color: #101e2c;
-    padding: 10px;
-    padding-top: 20px;
-    text-align: center;
+  margin-top: 30px;
+  background-color: #101e2c;
+  padding: 10px;
+  padding-top: 20px;
+  text-align: center;
 }
+
 .footer > .row {
-    display: flex;
-    border-bottom: 2px solid #f8f8ffe6;
-    margin-bottom: 10px;
+  display: flex;
+  border-bottom: 2px solid #f8f8ffe6;
+  margin-bottom: 10px;
 }
+
 .left {
-    text-align: start;
-    margin-left: 30%;
+  text-align: start;
+  margin-left: 30%;
 }
+
 .left > h5 {
-    color: white;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 15px;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
+
 .left > p {
-    margin-bottom: 0px;
-    color: white;
+  margin-bottom: 0px;
+  color: white;
 }
 
 .right {
-    text-align: start;
-    margin-bottom: 20px;
+  text-align: start;
+  margin-bottom: 20px;
 }
+
 .right > h5 {
-    color: white;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 15px;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
+
 .right > p {
-    margin-bottom: 0px;
-    color: white;
+  margin-bottom: 0px;
+  color: white;
 }
+
 .footer > a {
-    text-decoration: none !important;
-    color: #f8f8ffe6;
+  text-decoration: none !important;
+  color: #f8f8ffe6;
 }
 
 .footer > a:hover > i {
-    color: rgb(25, 25, 236);
+  color: rgb(25, 25, 236);
 }
+
 .footer > .c-line-center {
-    background-color: #c1c1c477;
-    height: 0px;
-    margin: 10px auto 10px auto;
-    width: 100%;
+  background-color: #c1c1c477;
+  height: 0px;
+  margin: 10px auto 10px auto;
+  width: 100%;
 }
 
 /* Mobile Version */
 /* Mobile Version */
 @media (max-width: 576px) {
-    .footer > .row {
-        display: block;
-        text-align: start;
-        border-bottom: none;
-    }
+  .footer > .row {
+    display: block;
+    text-align: start;
+    border-bottom: none;
+  }
 
-    .left, .right {
-        text-align: start;
-        margin-left: 10px;
-        margin-right: auto;
-    }
+  .left,
+  .right {
+    text-align: start;
+    margin-left: 10px;
+    margin-right: auto;
+  }
 
-    .left {
-        margin-bottom: 20px;
-    }
+  .left {
+    margin-bottom: 20px;
+  }
 
-    .right {
-        margin-bottom: 20px;
-    }
-    .footer > .c-line-center {
-        background-color: #c1c1c477;
-        height: 0.8px;
-        margin: 10px auto 10px auto;
-        width: 100%;
-    }
+  .right {
+    margin-bottom: 20px;
+  }
+
+  .footer > .c-line-center {
+    background-color: #c1c1c477;
+    height: 0.8px;
+    margin: 10px auto 10px auto;
+    width: 100%;
+  }
 }
-
 </style>

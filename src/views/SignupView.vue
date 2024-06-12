@@ -50,7 +50,7 @@
 </template>
 <script>
 import axios from 'axios'
-
+import { useStore } from '../stores/user'
 export default {
   data() {
     return {
@@ -58,18 +58,11 @@ export default {
       name: '',
       username: '',
       password: '',
-      email: ''
+      email: '',
+      store: useStore()
     }
   },
   methods: {
-    handleSubmit() {
-      // Your form submission logic goes here
-      // e.g., validate input data, make an API request, etc.
-      this.$notify({
-        title: 'Important message',
-        text: 'Hello user!'
-      })
-    },
     async signup() {
       try {
         // get value from input
@@ -77,8 +70,7 @@ export default {
         const name = this.name
         const password = this.password
         const email = this.email
-        alert(JSON.stringify({ name: name, username: username, password: password, email: email }))
-        const response = await axios.post('http://localhost:3000/register/validate', {
+        const response = await axios.post('https://run.captchanro.com/product/load', {
           name: name,
           username: username,
           password: password,
@@ -86,17 +78,20 @@ export default {
         })
         if (response.data.error_code === 0) {
           this.$swal('Đăng ký thành công', '', 'success')
+          this.store.setUser(response.data.user);
           this.$cookies.set('user', JSON.stringify(response.data.user))
           this.$router.push('/')
         } else {
           this.$swal('Đăng ký thất bại', response.data.message, 'error')
         }
       } catch (e) {
-        this.$swal('Đăng ký thất bại', 'Có lỗi xảy ra', 'error')
+        alert(e)
+        console.log(e.message)
+        this.$swal('Đăng ký thất bại', e.message, 'error')
       }
     }
   },
-  mounted() {}
+  mounted() { }
 }
 </script>
 <style lang="css" scoped>
@@ -106,6 +101,7 @@ export default {
   margin: 10px auto 10px auto;
   width: 70px;
 }
+
 .content {
   margin-left: 2%;
   width: 96%;
@@ -127,6 +123,7 @@ export default {
   text-align: center;
   border-radius: 4px;
 }
+
 .dangKy > .header-form > h5 {
   color: white;
   margin-bottom: 0px;
@@ -138,21 +135,26 @@ export default {
   margin: 20px 0;
   color: white;
 }
+
 .dangKy .input-group {
   margin-bottom: 30px;
 }
+
 .dangKy > .body-form > input {
   padding: 5px 0px 5px 0;
   width: 70%;
   margin-bottom: 15px;
 }
+
 .dangKy label {
   text-align: right;
 }
+
 .dangKy > .body-form > h2 {
   color: white;
   margin-left: 105px;
 }
+
 .dangKy > .body-form > button {
   background-color: #198754;
   color: white;
@@ -169,13 +171,16 @@ export default {
   border: 0;
   border-radius: 4px;
 }
+
 .row > .btn {
   margin-bottom: 10px;
 }
+
 .row > .text-center {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 .row > .dangNhap {
   border-width: 0.8px !important;
   border: #dc3545 solid;
@@ -185,6 +190,7 @@ export default {
   text-decoration: none !important;
   color: white;
 }
+
 .rules {
   background-color: #212529;
   margin: 20px 20px 200px 0;
@@ -192,12 +198,14 @@ export default {
   border-radius: 4px;
   box-shadow: 0 0 10px 5px rgba(128, 128, 128, 0.3);
 }
+
 .rules > .header-rules {
   background-color: #198754;
   padding: 10px 10px 10px 0px;
   text-align: center;
   border-radius: 4px;
 }
+
 .rules > .header-rules > h5 {
   color: white;
   margin-bottom: 0;

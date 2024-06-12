@@ -21,11 +21,10 @@ import { RouterLink } from 'vue-router'
         <div v-else class="nav-right navPhai">
           <ul class="menu">
             <li class="dropdown">
-              <h3 class="user"><i class="bi bi-person-check iconDaDangNhap"></i>{{ $cookies.get('user').full_name }}
-              </h3>
+              <h3 class="user"><i class="bi bi-person-check iconDaDangNhap"></i>{{ store.user.full_name }}</h3>
               <ul class="dropdown_menu">
                 <li class="soTien">
-                  <h5>{{ $cookies.get('user').money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}đ</h5>
+                  <h5>{{ store.user.money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') }}đ</h5>
                 </li>
                 <li class="li1">
                   <RouterLink to="/profile"> <i class="bi bi-person-fill"></i> Thông tin tài khoản </RouterLink>
@@ -59,7 +58,7 @@ import { RouterLink } from 'vue-router'
             <a class="nav-link" href="napTien.html">Nạp tiền</a>
           </li>
         </ul>
-        <ul v-if="!this.store.isLoggedIn" class="navbar-nav">
+        <ul v-if="!store.isLoggedIn" class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" href="dangNhap.html"><i class="bi bi-box-arrow-in-right"></i> Đăng Nhập</a>
           </li>
@@ -82,6 +81,7 @@ import { RouterLink } from 'vue-router'
 <script>
 // load the isSignedIn variable from user.js in store
 import { useStore } from '../../stores/user.js'
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -94,6 +94,25 @@ export default {
       this.$cookies.remove('user')
       this.store.logout()
       this.$router.push('/')
+    },
+    async relogin() {
+      if (this.$cookies.get('user') != null || this.$cookies.get('user') != undefined) {
+        const res = await axios.post('https://run.captchanro.com/product/load', {
+          username: this.$cookies.get('login_data').username,
+          password: this.$cookies.get('login_data').password
+        })
+        if (res.data.error_code === 0) {
+          this.store.setUser(res.data.user);
+          this.$cookies.set('user', JSON.stringify(res.data.user))
+          this.store.login()
+        } else {
+          this.store.login()
+          this.$router.push('/login')
+          this.$cookies.remove('login_data')
+          this.$cookies.remove('user')
+          this.store.logout()
+        }
+      }
     }
   },
   mounted() {
@@ -101,6 +120,8 @@ export default {
     if (this.$cookies.get('user') != null) {
       this.store.login()
     }
+    // relogin when user reload page
+    this.relogin()
   }
 }
 </script>

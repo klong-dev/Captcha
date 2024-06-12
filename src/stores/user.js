@@ -1,20 +1,27 @@
 import { defineStore } from 'pinia'
+import VueCookies from 'vue-cookies';
 
 export const useStore = defineStore('main', {
   state: () => ({
-    isLoggedIn: false
+    isLoggedIn: false,
+    user: VueCookies.get('user') || null
   }),
   actions: {
+    setUser(user) {
+      this.user = user;
+    },
+    setUserMoney(money) {
+      this.user.money = money;
+      VueCookies.set('user', JSON.stringify(this.user))
+    },
     setIsLoggedIn(value) {
       this.isLoggedIn = value
     },
     login() {
       this.setIsLoggedIn(true)
-      // You can add additional logic here, such as setting the user cookie
     },
     logout() {
       this.setIsLoggedIn(false)
-      // You can add additional logic here, such as removing the user cookie
     }
   }
 })

@@ -8,11 +8,11 @@
           <img src="/assets/images/anh-2.jpg" :alt="product.name" />
           <div class="text-content">
             <h5>{{ product.name }}</h5>
-            <p>{{ product.price }}đ / {{ product.time }} ngày</p>
+            <p>{{ product.price }}đ / {{ product.time }} tháng</p>
             <p><i class="bi bi-check-circle"></i> Tiết kiệm thời gian</p>
             <p><i class="bi bi-check-circle"></i> Giải siêu tốc &lt; 1 giây</p>
             <p><i class="bi bi-check-circle"></i> Hỗ Trợ 24/7</p>
-            <button @click="buy(product.id)"><span>THANH TOÁN</span></button>
+            <button @click="buy(product)"><span>THANH TOÁN</span></button>
           </div>
         </li>
       </ul>
@@ -21,23 +21,26 @@
 </template>
 <script>
 import axios from 'axios'
+import { useStore } from '../stores/user'
 export default {
   data() {
     return {
-      products: []
+      products: [],
+      store: useStore()
     }
   },
   methods: {
-    async buy(id) {
-      const response = await axios.post('http://localhost:3000/captcha/pay', { productId: id, uid: this.$cookies.get('user').uid })
+    async buy(product) {
+      const response = await axios.post('https://run.captchanro.com/product/load', { productId: product.id, uid: this.$cookies.get('user').uid })
       if (response.data.error_code === 0) {
         this.$swal('Thanh toán thành công', '', 'success')
+        this.store.setUserMoney(this.store.user.money - Number(product.price.replace('.', '')))
       } else {
         this.$swal(response.data.message, '', 'error')
       }
     },
     async loadProduct() {
-      const response = await axios.post('http://localhost:3000/product/load', { type: 1 })
+      const response = await axios.post('https://run.captchanro.com/product/load', { type: 1 })
       if (response.status == 200) {
         this.products = response.data
         //format all element price of products from 150000 to 150.000

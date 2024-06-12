@@ -3,8 +3,8 @@ import { RouterLink } from 'vue-router'
 </script>
 <template>
   <div class="content">
-    <div class="row d-flex justify-content-center main-content">
-      <div class="col-xl-11 col-md-11 col-lg-5 dangNhap">
+    <div class="row d-flex justify-content-center">
+      <div class="col-xl-5 col-lg-7 col-md-8 dangNhap">
         <div class="header-form">
           <h5>Đăng Nhập</h5>
         </div>
@@ -55,12 +55,14 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        const res = await axios.post('http://localhost:3000/login/validate', {
+        const res = await axios.post('https://run.captchanro.com/product/load', {
           username: this.username,
           password: this.password
         })
         if (res.data.error_code === 0) {
           this.$swal('Đăng nhập thành công', '', 'success')
+          this.store.setUser(res.data.user);
+          this.$cookies.set('login_data', JSON.stringify({ username: this.username, password: this.password }))
           this.$cookies.set('user', JSON.stringify(res.data.user))
           this.store.login()
           this.$router.push('/')
@@ -88,11 +90,12 @@ export default {
   background-color: white;
   box-shadow: 0 0 10px 5px rgba(128, 128, 128, 0.5);
 }
+
 .main-content {
   width: 33%;
 }
+
 .dangNhap {
-  width: 100%;
   background-color: #212529;
   margin: 20px 20px 20px 0;
   padding: 0 !important;
@@ -106,6 +109,7 @@ export default {
   text-align: center;
   border-radius: 4px;
 }
+
 .dangNhap > .header-form > h5 {
   color: white;
   margin: 5px auto;
@@ -116,23 +120,28 @@ export default {
   margin: 20px 0;
   color: white;
 }
+
 .dangNhap .input-group {
   margin-bottom: 30px;
 }
+
 .dangNhap > .body-form > input {
   padding: 5px 0px 5px 0;
   width: 70%;
   margin-bottom: 15px;
 }
+
 .dangNhap label {
   text-align: right;
   padding-right: 10px;
   padding-left: 0;
 }
+
 .dangNhap > .body-form > h2 {
   color: white;
   margin-left: 105px;
 }
+
 .dangNhap > .body-form > button {
   background-color: #198754;
   color: white;
@@ -149,30 +158,38 @@ export default {
   border: 0;
   border-radius: 4px;
 }
+
 .matKhau {
   margin-bottom: 20px !important;
 }
+
 .nhoTaiKhoan {
   text-align: center;
   margin-bottom: 15px;
 }
+
 .nhoTaiKhoan > label {
   margin: 0px;
   margin-left: 5px;
 }
+
 .quenMatKhau {
   text-align: center;
 }
+
 .quenMatKhau > a {
   text-decoration: none;
 }
+
 .quenMatKhau > a:hover {
   color: green;
   text-decoration: none;
 }
+
 .setup {
   margin-bottom: 20px;
 }
+
 input[type='submit']:hover {
   color: black;
 }
