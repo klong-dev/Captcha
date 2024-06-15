@@ -22,12 +22,14 @@ class RegisterController {
       if (errors.length === 0) {
         let { username, password, email, name } = req.body;
         let hashedPassword = (await bcrypt.hash(password, 10)).toString();
+        //
         const user = await User.create({
           username: username,
           password_hash: hashedPassword,
           email: email,
           full_name: name,
-          status: 0
+          status: 0,
+          pay_token: pay_token
         });
 
         if (user) {

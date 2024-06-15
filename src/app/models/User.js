@@ -32,7 +32,11 @@ const User = sequelize.define(
     money: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
+      },
+      pay_token: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
   },
   {
     timestamps: true, // Sử dụng timestamps để tự động thêm cột createdAt và updatedAt
